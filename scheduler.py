@@ -35,7 +35,7 @@ class Scheduler:
 
         while self.taskmap:
 
-            task = self.ready.get()
+            task: Task = self.ready.get()
 
             try:
                 result = task.run()

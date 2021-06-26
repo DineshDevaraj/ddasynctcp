@@ -8,14 +8,12 @@ def counter(maxLimit: int):
         print(f"Task {tid} {I}")
         yield
 
-def multiple_couroutines():
+def multiple_couroutines(sched):
 
-    scheduler = Scheduler()
-    scheduler.new(counter(10))
-    scheduler.new(counter(5))
-    scheduler.start()
+    sched.new(counter(10))
+    sched.new(counter(5))
 
-def nested_couroutines():
+def syscall_couroutines():
 
     selfId = yield GetTaskId()
     taskId = yield CreateTask(counter(10))
@@ -25,8 +23,26 @@ def nested_couroutines():
     yield WaitForTask(taskId)
     yield KillTask(taskId)
 
+def coroutine_level2():
+
+    yield "coroutine_level2"
+
+def coroutine_level1():
+
+    result = yield coroutine_level2()
+    print("coroutine_level1: ", result)
+    yield "coroutine_level1"
+
+def nested_couroutines():
+
+    result = yield coroutine_level1()
+    print("nested_couroutines: ", result)
+    yield
+
 if __name__ == "__main__":
     
     sched = Scheduler()
     sched.new(nested_couroutines())
+    # sched.new(syscall_couroutines())
+    # multiple_couroutines(sched)
     sched.start()
