@@ -17,10 +17,6 @@ class Task:
 
     def run(self):
 
-        return self.target.send(self.arg)
-
-    def run(self):
-
         while True:
                 
             try :
